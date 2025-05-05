@@ -1,4 +1,5 @@
 .env
 .shared
 /.idea/
-/volumes/
+/volumes/files/springer/*
+/volumes/logs/*
