@@ -1,0 +1,5 @@
+.env
+.shared
+/.idea/
+/volumes/
+/initializer/cookie.lwp
