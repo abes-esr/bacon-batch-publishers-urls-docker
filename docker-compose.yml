@@ -6,8 +6,7 @@ services:
     mem_limit: ${MEM_LIMIT}
     cpus: ${CPU_LIMIT}
     volumes:
-      - ./volumes/files/:/scripts/local/
-      - ./volumes/logs/:/scripts/logs/
+      - ${BACON_BATCH_PUBLISHERS_URLS_PATH_KBARTS}:/scripts/local/
     environment:
       MAIL_ADMIN: ${BACON_BATCH_PUBLISHERS_URLS_MAIL_ADMIN}
       MAIL_WS_URL: ${BACON_BATCH_PUBLISHERS_URLS_MAIL_WS_URL}
