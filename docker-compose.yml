@@ -8,6 +8,7 @@ services:
     volumes:
       - ${BACON_BATCH_PUBLISHERS_URLS_PATH_KBARTS}:/scripts/local/
     environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
       MAIL_ADMIN: ${BACON_BATCH_PUBLISHERS_URLS_MAIL_ADMIN}
       MAIL_WS_URL: ${BACON_BATCH_PUBLISHERS_URLS_MAIL_WS_URL}
       BACON_BATCH_PUBLISHERS_AT_STARTUP: ${BACON_BATCH_PUBLISHERS_AT_STARTUP}
@@ -21,8 +22,34 @@ services:
       # pour que les mises à jour de cette image soient auto-déployées par watchtower
       - "com.centurylinklabs.watchtower.scope=bacon-batch-publishers-urls-watchtower-scope"
 
+  bacon-api-publishers-urls:
+    image: abesesr/bacon:${BACON_API_PUBLISHERS_URLS_VERSION}
+    container_name: bacon-api-publishers-urls
+    restart: unless-stopped
+    mem_limit: ${MEM_LIMIT}
+    cpus: ${CPU_LIMIT}
+    volumes:
+      - ${BACON_BATCH_PUBLISHERS_URLS_PATH_KBARTS}:/scripts/batch/local/
+    ports:
+      - ${BACON_API_PUBLISHERS_URLS_PORT}:8080
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+      JWT_SECRET: ${BACON_API_PUBLISHERS_URLS_JWT_SECRET}
+      JWT_ANONYMOUSUSER: ${BACON_API_PUBLISHERS_URLS_JWT_ANONYMOUSUSER}
+      BATCH_JAR_PATH: ${BACON_API_PUBLISHERS_URLS_BATCH_JAR_PATH}
+      LOGGING_LEVEL_FR_ABES: debug
+#      logging.level.fr.abes=debug
+    labels:
+      # pour envoyer les logs dans le puits de log de l'abes
+      - "co.elastic.logs/enabled=true"
+      - "co.elastic.logs/processors.add_fields.target="
+      - "co.elastic.logs/processors.add_fields.fields.abes_appli=bacon-batch-publishers-urls"
+      - "co.elastic.logs/processors.add_fields.fields.abes_middleware=java-spring"
+      # pour que les mises à jour de cette image soient auto-déployées par watchtower
+      - "com.centurylinklabs.watchtower.scope=bacon-batch-publishers-urls-watchtower-scope"
+
   #  #######################################
-  #  # periscope-watchtower
+  #  # bacon-batch-publishers-urls-watchtower
   #  # Conteneur chargé de mettre à jour automatiquement toutes les N secondes
   #  # les images docker des conteneurs surveillés (via le système de label/scope de watchtower)
   #  # plus d'info : https://containrrr.dev/watchtower
